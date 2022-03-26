@@ -3,8 +3,10 @@ import 'dart:developer' as devtools show log;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:mynotes/constants/routes.dart';
 import 'package:mynotes/views/login_view.dart';
 import 'package:mynotes/views/register_view.dart';
+import 'package:mynotes/views/verify_email_view.dart';
 
 import 'firebase_options.dart';
 
@@ -18,9 +20,9 @@ void main() {
       ),
       home: const HomePage(),
       routes: {
-        '/login': (context) => const LoginView(),
-        '/register': (context) => const RegisterView(),
-        '/notes': (context) => const NotesView()
+        loginRoute: (context) => const LoginView(),
+        registerRoute: (context) => const RegisterView(),
+        notesRoute: (context) => const NotesView()
       },
     ),
   );
@@ -59,31 +61,6 @@ class HomePage extends StatelessWidget {
   }
 }
 
-class VerifyEmailView extends StatelessWidget {
-  const VerifyEmailView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Verify email'),
-      ),
-      body: Column(
-        children: [
-          const Text('Please verify your email address'),
-          TextButton(
-            onPressed: () async {
-              final user = FirebaseAuth.instance.currentUser;
-              await user?.sendEmailVerification();
-            },
-            child: const Text('Send email verification'),
-          )
-        ],
-      ),
-    );
-  }
-}
-
 enum MenuAction { logout }
 
 class NotesView extends StatefulWidget {
@@ -109,7 +86,7 @@ class _NotesViewState extends State<NotesView> {
                   if (shouldLogout) {
                     await FirebaseAuth.instance.signOut();
                     Navigator.pushNamedAndRemoveUntil(
-                        context, '/login', (_) => false);
+                        context, loginRoute, (_) => false);
                   }
 
                   break;
